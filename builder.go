@@ -19,6 +19,7 @@ func Raw(expression string) Expression {
 // Quote creates a safely escaped yq string literal.
 func Quote(value string) Expression {
 	encoded, _ := json.Marshal(value)
+
 	return Raw(string(encoded))
 }
 
@@ -27,6 +28,7 @@ func Literal(value any) (Expression, error) {
 	if err != nil {
 		return Expression{}, fmt.Errorf("encode yq literal for %T: %w", value, err)
 	}
+
 	return Raw(string(encoded)), nil
 }
 
@@ -52,6 +54,7 @@ func (b *Builder) Build() string {
 	for i, step := range b.steps {
 		steps[i] = step.String()
 	}
+
 	return strings.Join(steps, " | ")
 }
 
@@ -62,11 +65,13 @@ func (b *Builder) Steps() []Expression {
 
 func (b *Builder) Reset() *Builder {
 	b.steps = b.steps[:0]
+
 	return b
 }
 
 func (b *Builder) Pipe(expression Expression) *Builder {
 	b.steps = append(b.steps, expression)
+
 	return b
 }
 
